@@ -18,3 +18,14 @@ Feature: Transferencias entre Cuentas
   And el saldo de la cuenta origen se reduce en 5000000 Gs
   And el saldo de la cuenta destino aumenta en 5000000 Gs
   And se genera un comprobante de la transferencias
+
+ @edge_case
+  Scenario: Realizar una transferencia interna durante el cierre operativo
+  Given la cuenta destino pertenece al mismo banco
+  And la cuenta destino se encuentra activa
+  And el cierre operativo se encuentra en proceso
+  When el cliente realiza una transferencia de 5000000 Gs desde la cuenta origen hacia la cuenta destino
+  Then la transferencia debe ser procesada de acuerdo con las reglas definidas para el cierre operativo
+  And el débito de la cuenta origen y el crédito de la cuenta destino deben quedar registrados correctamente
+  And la operación no debe quedar procesada parcialmente
+  And la transferencia debe mantener su trazabilidad luego de finalizar el cierre operativo
